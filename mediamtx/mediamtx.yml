@@ -1,27 +1,35 @@
-# Server settings
-server:
-  protocols: [tcp, udp]
-  loglevel: info
-  http:
-    addr: ":8888"
-  rtmp:
-    addr: ":1935"
-  rtsp:
-    addr: ":8554"
-  webrtc:
-    addr: ":8889"
+# MediaMTX Configuration - v1.15.6 Production Optimized
 
-# WebRTC configuration
-webrtc:
-  enabled: yes
-  iceServers:
-    - urls: ["stun:stun.l.google.com:19302"]
+# General
+logLevel: info
 
-# Stream configuration
+# API - Moved to 9997 to avoid conflict with HLS
+api: yes
+apiAddress: :9997
+
+# RTSP - Internal routing for analytics [cite: 59, 120]
+rtsp: yes
+rtspAddress: :8554
+# Use updated key to resolve WAR message
+rtspTransports: [tcp, udp]
+
+# RTMP - Ingestion from legacy edge devices [cite: 32, 102]
+rtmp: yes
+rtmpAddress: :1935
+
+# HLS - Web Playback (defaults to 8888) [cite: 34]
+hls: yes
+hlsAddress: :8888
+
+# WebRTC - SaaS/Low Latency Playback [cite: 31, 98]
+webrtc: yes
+webrtcAddress: :8889
+# Use updated key to resolve WAR message
+webrtcICEServers2: 
+  - url: stun:stun.l.google.com:19302
+
+# Stream Configuration [cite: 88, 121]
 paths:
   all:
-    #publish:
-      # Require secret token for push (optional)
-      # run: on_publish.sh
+    # Allows any Edge Agent to push a stream [cite: 30, 105]
     source: publisher
-
