@@ -10,6 +10,7 @@ services:
       - "8554:8554" # RTSP ingest / playback
       - "8888:8888" # HTTP / API
       - "3478:3478" # STUN / TURN (optional)
+      - "8889:8889" # WebRTC
     volumes:
       - ./mediamtx/mediamtx.yml:/mediamtx.yml
       - ./recordings:/recordings
