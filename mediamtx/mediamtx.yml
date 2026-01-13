@@ -1,0 +1,27 @@
+# Server settings
+server:
+  protocols: [tcp, udp]
+  loglevel: info
+  http:
+    addr: ":8888"
+  rtmp:
+    addr: ":1935"
+  rtsp:
+    addr: ":8554"
+  webrtc:
+    addr: ":8889"
+
+# WebRTC configuration
+webrtc:
+  enabled: yes
+  iceServers:
+    - urls: ["stun:stun.l.google.com:19302"]
+
+# Stream configuration
+paths:
+  all:
+    #publish:
+      # Require secret token for push (optional)
+      # run: on_publish.sh
+    source: publisher
+

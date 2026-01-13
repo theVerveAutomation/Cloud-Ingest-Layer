@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  mediamtx:
+    image: bluenviron/mediamtx:1-ffmpeg
+    container_name: mediamtx
+    restart: unless-stopped
+    ports:
+      - "1935:1935" # RTMP ingest
+      - "8554:8554" # RTSP ingest / playback
+      - "8888:8888" # HTTP / API
+      - "3478:3478" # STUN / TURN (optional)
+    volumes:
+      - ./mediamtx/mediamtx.yml:/mediamtx.yml
+      - ./recordings:/recordings
