@@ -24,6 +24,7 @@ hlsAddress: :8888
 # WebRTC - SaaS/Low Latency Playback [cite: 31, 98]
 webrtc: yes
 webrtcAddress: :8889
+webrtcICEUDP: yes
 # Use updated key to resolve WAR message
 webrtcICEServers2: 
   - url: stun:stun.l.google.com:19302
