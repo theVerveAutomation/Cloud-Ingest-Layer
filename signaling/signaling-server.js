@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
         if (edgeSocket) {
             console.log(`Requesting relay for ${camId} from ${targetEdgeId}`);
             // NOTE: Replace 'YOUR_PUBLIC_IP' with your actual VPS IP address
-            const ingestUrl = `rtmp://YOUR_PUBLIC_IP:1935/live/${targetEdgeId}_${camId}`;
+            const ingestUrl = `rtmp://172.20.0.1:1935/live/${targetEdgeId}_${camId}`;
 
             io.to(edgeSocket).emit("cmd_stream_push", {
                 camId,
