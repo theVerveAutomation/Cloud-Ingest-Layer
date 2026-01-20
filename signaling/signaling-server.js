@@ -17,6 +17,7 @@ io.on("connection", (socket) => {
     socket.on("register_edge", (edgeId) => {
         edges.set(edgeId, socket.id);
         console.log(`Edge Online: ${edgeId}`);
+        socket.emit("edge_registered", { success: true });
     });
 
     // 2. Start Stream Command (Frontend -> Cloud -> Edge)
