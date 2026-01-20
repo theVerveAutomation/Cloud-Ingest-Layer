@@ -1,16 +1,31 @@
-version: "3.9"
-
 services:
   mediamtx:
     image: bluenviron/mediamtx:1-ffmpeg
     container_name: mediamtx-ffmpeg
+    networks:
+      - app-net
     restart: unless-stopped
     ports:
       - "1935:1935" # RTMP
-      - "8554:8554" # RTSP
+      - "8555:8554" # RTSP
       - "8888:8888" # HLS Playback
       - "8889:8889" # WebRTC
       - "9997:9997" # API
+      - "8189:8189/udp" #udps
     volumes:
       - ./mediamtx/mediamtx.yml:/mediamtx.yml
       - ./recordings:/recordings
+
+  # Service 2: Signaling Server
+  signaling:
+    build: ./signaling
+    container_name: cloud_signal
+    networks:
+      - app-net
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # WebSocket (for Edge & Frontend)
+
+networks:
+  app-net:
+    external: true
