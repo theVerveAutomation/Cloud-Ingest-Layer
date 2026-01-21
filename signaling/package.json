@@ -2,11 +2,11 @@
   "name": "cloud-ingest-layer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "signaling-server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node ./signaling-server.js",
+    "dev": "nodemon signaling-server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/theVerveAutomation/Cloud-Ingest-Layer#readme",
   "dependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "socket.io": "^4.7.2"
   }
 }

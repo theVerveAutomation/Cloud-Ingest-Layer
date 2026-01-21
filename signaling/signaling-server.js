@@ -1,0 +1,61 @@
+const io = require("socket.io")(3000, {
+    cors: {
+        origin: "*", // Allow all origins (Lock this down to your domain in production!)
+        methods: ["GET", "POST"]
+    }
+});
+
+console.log("Signaling Server running on port 3000");
+
+// Map EdgeID -> SocketID
+const edges = new Map();
+
+io.on("connection", (socket) => {
+    console.log(`New connection: ${socket.id}`);
+
+    // 1. Edge Registration
+    socket.on("register_edge", (edgeId) => {
+        edges.set(edgeId, socket.id);
+        console.log(`Edge Online: ${edgeId}`);
+        socket.emit("edge_registered", { success: true });
+    });
+
+    // 2. Start Stream Command (Frontend -> Cloud -> Edge)
+    socket.on("start_relay", (data) => {
+        const { targetEdgeId, camId } = data;
+        const edgeSocket = edges.get(targetEdgeId);
+
+        if (edgeSocket) {
+            console.log(`Requesting relay for ${camId} from ${targetEdgeId}`);
+            // NOTE: Replace 'YOUR_PUBLIC_IP' with your actual VPS IP address
+            const ingestUrl = `rtmp://172.20.0.1:1935/live/${targetEdgeId}_${camId}`;
+
+            io.to(edgeSocket).emit("cmd_stream_push", {
+                camId,
+                ingestUrl
+            });
+        } else {
+            console.log(`Edge ${targetEdgeId} not found!`);
+        }
+    });
+
+    // 3. Stop Stream Command
+    socket.on("stop_relay", (data) => {
+        const edgeSocket = edges.get(data.targetEdgeId);
+        if (edgeSocket) {
+            io.to(edgeSocket).emit("cmd_stream_stop", { camId: data.camId });
+        }
+    });
+
+    // 4. Cleanup on disconnect
+    socket.on("disconnect", () => {
+        // Optional: Remove edge from map if it disconnects
+        for (const [key, value] of edges.entries()) {
+            if (value === socket.id) {
+                edges.delete(key);
+                console.log(`Edge Offline: ${key}`);
+                break;
+            }
+        }
+    });
+});
