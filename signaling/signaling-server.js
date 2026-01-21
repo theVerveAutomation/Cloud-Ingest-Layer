@@ -27,8 +27,7 @@ io.on("connection", (socket) => {
 
         if (edgeSocket) {
             console.log(`Requesting relay for ${camId} from ${targetEdgeId}`);
-            // NOTE: Replace 'YOUR_PUBLIC_IP' with your actual VPS IP address
-            const ingestUrl = `rtmp://172.20.0.1:1935/live/${targetEdgeId}_${camId}`;
+            const ingestUrl = `live/${targetEdgeId}_${camId}`;
 
             io.to(edgeSocket).emit("cmd_stream_push", {
                 camId,
@@ -41,9 +40,11 @@ io.on("connection", (socket) => {
 
     // 3. Stop Stream Command
     socket.on("stop_relay", (data) => {
-        const edgeSocket = edges.get(data.targetEdgeId);
+        console.log("Stop relay command received");
+        const { targetEdgeId, camId } = data;
+        const edgeSocket = edges.get(targetEdgeId);
         if (edgeSocket) {
-            io.to(edgeSocket).emit("cmd_stream_stop", { camId: data.camId });
+            io.to(edgeSocket).emit("cmd_stream_stop", { camId });
         }
     });
 
