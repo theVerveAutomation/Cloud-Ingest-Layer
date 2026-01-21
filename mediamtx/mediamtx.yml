@@ -43,7 +43,6 @@ webrtcICEServers2:
 
 webrtcAdditionalHosts: ["127.0.0.1"]
 
-
-path: 
+paths: 
   all:
     source: publisher
