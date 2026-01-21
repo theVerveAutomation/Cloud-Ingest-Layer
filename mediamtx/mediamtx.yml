@@ -44,23 +44,6 @@ webrtcICEServers2:
 webrtcAdditionalHosts: ["127.0.0.1"]
 
 
-# Stream Configuration [cite: 88, 121]
-# paths:
-#   cam1:
-#     source: rtsp://172.20.0.3:8554/cam1  # Replace with go2rtc IP/Hostname
-#   cam2:
-#     source: rtsp://172.20.0.3:8554/cam2
-#   cam3:
-#     source: rtsp://172.20.0.3:8554/cam3
-paths:
-  # Template for all streams pushed to /live/...
-  ~^live/.*$:
-    # Authenticate the Edge Device (The Pusher)
-    # publishUser: edge_agent
-    # publishPass: "SuperSecretEdgePassword"
-    
-    # Optional: Turn off HLS/WebRTC if not needed to save CPU
-    runOnDemand: "no"
-
-  # path: 
-  #   source: rtmp://172.20.0.1:1935/live/org_123_site_A_camera1
+path: 
+  all:
+    source: publisher
