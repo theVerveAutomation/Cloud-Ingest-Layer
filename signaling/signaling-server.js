@@ -1,3 +1,4 @@
+const db = require("./db-queries");
 const io = require("socket.io")(3000, {
     cors: {
         origin: "*", // Allow all origins (Lock this down to your domain in production!)
@@ -14,10 +15,11 @@ io.on("connection", (socket) => {
     console.log(`New connection: ${socket.id}`);
 
     // 1. Edge Registration
-    socket.on("register_edge", (edgeId) => {
+    socket.on("register_edge", async (edgeId) => {
         edges.set(edgeId, socket.id);
+        const data = await db.fetchCamerasForAOrganization(edgeId);
         console.log(`Edge Online: ${edgeId}`);
-        socket.emit("edge_registered", { success: true });
+        socket.emit("edge_registered", { data });
     });
 
     // 2. Start Stream Command (Frontend -> Cloud -> Edge)
@@ -27,15 +29,20 @@ io.on("connection", (socket) => {
 
         if (edgeSocket) {
             console.log(`Requesting relay for ${camId} from ${targetEdgeId}`);
-            const ingestUrl = `live/${targetEdgeId}_${camId}`;
+            const ingestPath = `live/${targetEdgeId}_${camId}`;
 
             io.to(edgeSocket).emit("cmd_stream_push", {
                 camId,
-                ingestUrl
+                ingestPath
             });
         } else {
             console.log(`Edge ${targetEdgeId} not found!`);
         }
+    });
+
+    socket.on("relay_info", (relayData) => {
+        console.log(`Relay info received: `, relayData);
+        io.to(socket.id).emit("relay_info", relayData);
     });
 
     // 3. Stop Stream Command
