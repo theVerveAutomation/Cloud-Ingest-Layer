@@ -10,7 +10,7 @@ services:
       - "8555:8554" # RTSP
       - "8888:8888" # HLS Playback
       - "8889:8889" # WebRTC
-      - "8889:8889/udp"   # WebRTC Media (The video streams)
+      - "8889:8889/udp" # WebRTC Media (The video streams)
       - "9997:9997" # API
       - "8189:8189/udp" #udps
     volumes:
@@ -21,6 +21,9 @@ services:
   signaling:
     build: ./signaling
     container_name: cloud_signal
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
     networks:
       - app-net
     restart: unless-stopped
