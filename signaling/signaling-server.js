@@ -1,4 +1,5 @@
-const db = require("./db-queries");
+const db = require("./services/db-queries");
+const deleteOSnapshotsJob = require("./scheduler/snapshot.job");
 const io = require("socket.io")(3000, {
     cors: {
         origin: "*", // Allow all origins (Lock this down to your domain in production!)
@@ -20,6 +21,8 @@ io.on("connection", (socket) => {
         const data = await db.fetchCamerasForAOrganization(edgeId);
         console.log(`Edge Online: ${edgeId}`);
         socket.emit("edge_registered", { data });
+        deleteOSnapshotsJob(data);
+        // db.deleteSnapshots(data);
     });
 
     // 2. Start Stream Command (Frontend -> Cloud -> Edge)
